@@ -19,7 +19,7 @@ vcf_files = ["my_vcf",] # suffix currently assumed to be ".vcf.gz" - would make 
 
 outname = "test_standard_depths"
 
-get_depth_outliers_parallel(
+dpf.get_depth_outliers_parallel(
     fixlist=vcf_files,              # list of vcf file prefixes (.vcf.gz)
     outfix=outname,                 # prefix of outfiles (for R processing)
     window=10_000,                  # genome window size

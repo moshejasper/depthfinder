@@ -62,7 +62,7 @@ def _process_one_vcf_file(
     Worker: process a single .vcf.gz and return (samples, chrom_dict, repcount, skipcount).
     chrom_dict[chrom] = {"depths": (W,N), "sitecounts": (W,), "window_indices": (W,)}
     """
-    
+
     vcf = _vcf.VCFReader(vcf_path)
     samples = vcf.samples
     ll = len(samples)
@@ -351,8 +351,8 @@ def get_outliers_from_chrom_dict_normalized(
     p_high = norm.sf(z)
 
     # normalized cutoffs
-    y_lower_cut = mu[:, None] + norm.ppf(alpha) * sigma[:, None]
-    y_upper_cut = mu[:, None] + norm.isf(alpha) * sigma[:, None]
+    y_lower_cut = mu + norm.ppf(alpha) * sigma
+    y_upper_cut = mu + norm.isf(alpha) * sigma
 
     # -----------------------------
     # 7) individual-level failures
@@ -655,4 +655,3 @@ def get_depths_outliers_parallel(
     return fail_outliers, chrom_dict, samples
 
     
-

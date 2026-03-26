@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "depthfinder"
+version = "0.0.1"
+description = "Demo of depth scripting"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.1",
+    "scipy",
+    "treeflows[stats] @ git+https://github.com/moshejasper/treeflows.git",
+]
+
+[project.scripts]
+mytool = "mytool.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

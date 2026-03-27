@@ -15,12 +15,12 @@ Then adapt the supplied `example.py` script to run on an appropriate `.vcf` file
 
 from depthfinder import depthfinder as dpf
 
-vcf_files = ["my_vcf",] # suffix currently assumed to be ".vcf.gz" - would make more robust if needed... also presumes list of files
+vcf_files = ["my_vcf1.vcf.gz", "my_vcf2.vcf.gz"] # individual vcf file or list of files
 
 outname = "test_standard_depths"
 
 dpf.get_depth_outliers_parallel(
-    fixlist=vcf_files,              # list of vcf file prefixes (.vcf.gz)
+    fixlist=vcf_files,              # list of vcf files (need .vcf or .vcf.gz suffix)
     outfix=outname,                 # prefix of outfiles (for R processing)
     window=10_000,                  # genome window size
     n_jobs=1,                       # how many parallel threads to use

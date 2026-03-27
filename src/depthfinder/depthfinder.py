@@ -5,6 +5,8 @@ from treeflows import vcf_core as _vcf
 from scipy.stats import norm
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from treeflows.gff import GenomeMask
+from treeflows.Spath import Mpath
+from pathlib import Path
 
 
 def get_genint_str(filefix, pref, suff):
@@ -69,7 +71,6 @@ def _process_one_vcf_file(
 
     if genint is not None:
         _chrom, _start, _end = parse_genint(genint)
-        #vcf.set_region(chrom, start, end)
     else:
         _chrom, _start, _end = None, None, None
 
@@ -185,7 +186,7 @@ def _merge_chrom_dicts(chrom_dicts_in_order):
 
 
 def get_depths_dict_parallel(
-    fixlist: list,
+    fixlist: list|str,
     window=10_000,
     n_jobs=8,
     min_miss_frac=0.5,
@@ -195,7 +196,20 @@ def get_depths_dict_parallel(
     gen_intvs=None,
     use_ints=False): # silence worker progress
 
-    fixfiles = [f + ".vcf.gz" for f in fixlist]
+    if isinstance(fixlist, str):
+        fixlist = [fixlist,]
+
+    # WORK OUT THE SUFFIXES.NO .BAMS YET
+    f1 = fixlist[0]
+    if f1.endswith('.vcf.gz') or f1.endswith('.vcf'):
+        fixfiles = fixlist
+    elif Path(f1 + '.vcf.gz').exists():
+        fixfiles = [f + '.vcf.gz' for f in fixlist]
+    elif Path(f1 + '.vcf').exists():
+        fixfiles = [f + '.vcf' for f in fixlist]
+    else:
+        raise ValueError(f"Unknown file format for {f1}. Needs to be '.vcf.gz' or '.vcf'") # not yet implementing .bcf as issues with vcf_core
+
     genints = gen_intvs if use_ints else [None] * len(fixfiles) # if not using genints, just pass None to workers
 
     # run workers
@@ -240,11 +254,6 @@ def get_depths_dict_parallel(
 
     # merge in file order
     chrom_dict = _merge_chrom_dicts(results)
-
-    # from here, continue exactly as you already do:
-    # - build glob_depths / glob_sitecounts from chrom_dict
-    # - apply window_depth_thresh and your NB/Poisson/OptionB logic
-    # - map back to chrom/positions and write outputs
 
     return chrom_dict, sample_ref
 

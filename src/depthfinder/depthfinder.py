@@ -469,7 +469,7 @@ def write_outlier_windows(fail_window_positions, outfix, samples, window=10_000,
         center_label = "median" if use_median else "mean"
 
         ofi.write(
-            f'chrom_position\twindow_start\t\tfrac\tlow_frac\thigh_frac\t'
+            f'chrom_position\twindow_start\tfrac\tlow_frac\thigh_frac\t'
             f'norm_depth_{center_label}\tnorm_depth_lower_cut\tnorm_depth_upper_cut\t'
             f'low_depth_ids\thigh_depth_ids\n'
         )
